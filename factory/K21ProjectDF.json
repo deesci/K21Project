@@ -1,0 +1,9 @@
+{
+	"name": "K21ProjectDF",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5e6b3e1f-3333-46b9-befb-1c32391dae95",
+		"tenantId": "fe0b41ee-86b5-4fa5-bb1d-f76a2e26d374"
+	}
+}
