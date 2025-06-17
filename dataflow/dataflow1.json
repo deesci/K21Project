@@ -1,0 +1,61 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "df_raw_cases_and_dchg",
+						"type": "DatasetReference"
+					},
+					"name": "CasesChgSource"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "FilterEurope"
+				},
+				{
+					"name": "SelectReqFields"
+				},
+				{
+					"name": "PivotCountlll"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          country as string,",
+				"          country_code as string,",
+				"          continent as string,",
+				"          population as integer,",
+				"          indicator as string,",
+				"          daily_count as integer,",
+				"          date as string,",
+				"          rate_14_day as integer,",
+				"          source as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> CasesChgSource",
+				"CasesChgSource filter(continent == 'Europe') ~> FilterEurope",
+				"FilterEurope select(mapColumn(",
+				"          country,",
+				"          country_code,",
+				"          population,",
+				"          indicator,",
+				"          daily_count,",
+				"          date,",
+				"          source,",
+				"          each(match(name == 'date'),",
+				"               'reported' + '_date' = $$)",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectReqFields",
+				"SelectReqFields pivot(columnNaming: '$V$N',",
+				"     lateral: true) ~> PivotCountlll"
+			]
+		}
+	}
+}
