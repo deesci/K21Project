@@ -26,7 +26,15 @@
 					"name": "DimDateSource"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_processed_hosp_admissions_weekly",
+						"type": "DatasetReference"
+					},
+					"name": "WeeklySink"
+				}
+			],
 			"transformations": [
 				{
 					"name": "SelectRequiredFields"
@@ -144,13 +152,14 @@
 				"          year_week,",
 				"          source,",
 				"          week_start_date,",
-				"          week_end_date),",
+				"          week_end_date,",
+				"          country),",
 				"     pivotBy(indicator, ['Weekly new hospital admissions per 100k', 'Weekly new ICU admissions per 100k']),",
 				"     count = sum(value),",
 				"     columnNaming: '$N$V',",
 				"     lateral: true) ~> PivotWeekly",
 				"PivotWeekly sort(desc(year_week, true),",
-				"     asc(country_code_2_digit, true)) ~> sortWeekly",
+				"     asc(country, true)) ~> sortWeekly",
 				"sortWeekly select(mapColumn(",
 				"          country_code_2_digit,",
 				"          country_code_3_digit,",
@@ -160,10 +169,30 @@
 				"          week_start_date,",
 				"          week_end_date,",
 				"          new_hospit_occupancy = {countWeekly new hospital admissions per 100k},",
-				"          {countWeekly new ICU admissions per 100k}",
+				"          {countWeekly new ICU admissions per 100k},",
+				"          country",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectweekly"
+				"     skipDuplicateMapOutputs: true) ~> selectweekly",
+				"selectweekly sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          country as string,",
+				"          country_code as string,",
+				"          population as string,",
+				"          indicator as string,",
+				"          daily_count as string,",
+				"          date as string,",
+				"          source as string,",
+				"          country_code_2_digit as string,",
+				"          country_code_3_digit as string,",
+				"          continent as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> WeeklySink"
 			]
 		}
 	}
