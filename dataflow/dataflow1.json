@@ -10,9 +10,24 @@
 						"type": "DatasetReference"
 					},
 					"name": "CasesChgSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "df_country_lookup",
+						"type": "DatasetReference"
+					},
+					"name": "CountryLookup"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_processed_cases_and_chg",
+						"type": "DatasetReference"
+					},
+					"name": "ProcessedData"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FilterEurope"
@@ -21,7 +36,7 @@
 					"name": "SelectReqFields"
 				},
 				{
-					"name": "PivotCountlll"
+					"name": "lookupCountry"
 				}
 			],
 			"scriptLines": [
@@ -39,6 +54,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> CasesChgSource",
+				"source(output(",
+				"          country as string,",
+				"          country_code_2_digit as string,",
+				"          country_code_3_digit as string,",
+				"          continent as string,",
+				"          population as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> CountryLookup",
 				"CasesChgSource filter(continent == 'Europe') ~> FilterEurope",
 				"FilterEurope select(mapColumn(",
 				"          country,",
@@ -53,8 +78,31 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectReqFields",
-				"SelectReqFields pivot(columnNaming: '$V$N',",
-				"     lateral: true) ~> PivotCountlll"
+				"SelectReqFields, CountryLookup lookup(SelectReqFields@country == CountryLookup@country,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookupCountry",
+				"lookupCountry sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          country = SelectReqFields@country,",
+				"          country_code,",
+				"          population = SelectReqFields@population,",
+				"          indicator,",
+				"          daily_count,",
+				"          date,",
+				"          source,",
+				"          country = CountryLookup@country,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          continent,",
+				"          population = CountryLookup@population",
+				"     )) ~> ProcessedData"
 			]
 		}
 	}
