@@ -11,11 +11,20 @@
 		"ls_blob_k21projectrepsa_connectionString": {
 			"value": ""
 		},
+		"ls_db_k21_cluster_accessToken": {
+			"value": ""
+		},
+		"demodbricks_accessToken": {
+			"value": ""
+		},
 		"is_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 			"value": "https://raw.githubusercontent.com/hbuddana/Azure_Data_Factory_COVID-19_Reporting/refs/heads/main/dataset/ds_ecdc_file_list.json"
 		},
 		"ls_adls_k21project_repdl_properties_typeProperties_url": {
 			"value": "https://k21projectdlsg2.dfs.core.windows.net/"
+		},
+		"demodbricks_properties_typeProperties_existingClusterId": {
+			"value": "0618-122214-3v531adn"
 		}
 	}
 }

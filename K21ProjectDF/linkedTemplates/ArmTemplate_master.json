@@ -15,6 +15,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_blob_k21projectrepsa'"
 		},
+		"ls_db_k21_cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'ls_db_k21_cluster'"
+		},
+		"demodbricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'demodbricks'"
+		},
 		"is_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://raw.githubusercontent.com/hbuddana/Azure_Data_Factory_COVID-19_Reporting/refs/heads/main/dataset/ds_ecdc_file_list.json"
@@ -22,6 +30,10 @@
 		"ls_adls_k21project_repdl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://k21projectdlsg2.dfs.core.windows.net/"
+		},
+		"demodbricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0618-122214-3v531adn"
 		},
 		"containerUri": {
 			"type": "string",
@@ -56,11 +68,20 @@
 					"ls_blob_k21projectrepsa_connectionString": {
 						"value": "[parameters('ls_blob_k21projectrepsa_connectionString')]"
 					},
+					"ls_db_k21_cluster_accessToken": {
+						"value": "[parameters('ls_db_k21_cluster_accessToken')]"
+					},
+					"demodbricks_accessToken": {
+						"value": "[parameters('demodbricks_accessToken')]"
+					},
 					"is_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 						"value": "[parameters('is_http_opendata_ecdc_europa_eu_properties_typeProperties_url')]"
 					},
 					"ls_adls_k21project_repdl_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls_k21project_repdl_properties_typeProperties_url')]"
+					},
+					"demodbricks_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('demodbricks_properties_typeProperties_existingClusterId')]"
 					}
 				}
 			},
