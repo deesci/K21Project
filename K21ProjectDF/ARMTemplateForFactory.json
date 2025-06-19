@@ -614,7 +614,7 @@
 									},
 									{
 										"source": {
-											"name": "new_hospit_occupancy",
+											"name": "countWeekly new ICU admissions per 100k",
 											"type": "String",
 											"physicalType": "String"
 										},
@@ -626,7 +626,7 @@
 									},
 									{
 										"source": {
-											"name": "countWeekly new ICU admissions per 100k",
+											"name": "new_hospit_occupancy",
 											"type": "String",
 											"physicalType": "String"
 										},
