@@ -110,7 +110,7 @@
 							},
 							{
 								"source": {
-									"name": "week_start_date",
+									"name": "week_end_date",
 									"type": "String",
 									"physicalType": "String"
 								},
