@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "K21ProjectDF"
 		},
+		"demodbricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'demodbricks'"
+		},
 		"ls_adls_k21project_repdl_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adls_k21project_repdl'"
@@ -19,9 +23,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'ls_db_k21_cluster'"
 		},
-		"demodbricks_accessToken": {
+		"ls_sql_k21proj_db_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'demodbricks'"
+			"metadata": "Secure string for 'connectionString' of 'ls_sql_k21proj_db'"
+		},
+		"demodbricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0618-122214-3v531adn"
 		},
 		"is_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 			"type": "string",
@@ -30,10 +38,6 @@
 		"ls_adls_k21project_repdl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://k21projectdlsg2.dfs.core.windows.net/"
-		},
-		"demodbricks_properties_typeProperties_existingClusterId": {
-			"type": "string",
-			"defaultValue": "0618-122214-3v531adn"
 		}
 	},
 	"variables": {
@@ -486,6 +490,212 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_process_population_databrick_activityrun')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ExecutePopulationTransformation",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/deepin_1@outlook.com/set-up/mount_storage"
+						},
+						"linkedServiceName": {
+							"referenceName": "demodbricks",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/demodbricks')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sql_ie_cases_and_chg_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyCasesAndChg",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "country",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "country",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "country_code_2_digit",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "country_code_2_digit",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "country_code_3_digit",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "country_code_3_digit",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "population",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "population",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "new_hospit_occupancy",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cases_count",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "countWeekly new ICU admissions per 100k",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "deaths_count",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "week_start_date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "reported_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "source",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "source",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_processed_cases_and_chg",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "cases_chg_sql_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_processed_cases_and_chg')]",
+				"[concat(variables('factoryId'), '/datasets/cases_chg_sql_ds')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_transform_cases_chg')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -551,6 +761,63 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/is_http_opendata_ecdc_europa_eu')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cases_chg_sql_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_k21proj_db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "country_code_2_digit",
+						"type": "varchar"
+					},
+					{
+						"name": "country_code_3_digit",
+						"type": "varchar"
+					},
+					{
+						"name": "population",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "cases_count",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "deaths_count",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "reported_date",
+						"type": "date"
+					},
+					{
+						"name": "source",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Project_Reporting",
+					"table": "cases_and_chg"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_k21proj_db')]"
 			]
 		},
 		{
@@ -1180,6 +1447,24 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/demodbricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-3408983348527270.10.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('demodbricks_accessToken')]"
+					},
+					"existingClusterId": "[parameters('demodbricks_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/is_http_opendata_ecdc_europa_eu')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1238,6 +1523,19 @@
 						"type": "SecureString",
 						"value": "[parameters('ls_db_k21_cluster_accessToken')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sql_k21proj_db')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_sql_k21proj_db_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -1624,60 +1922,6 @@
 				"[concat(variables('factoryId'), '/datasets/ds_processed_hosp_admissions_weekly')]",
 				"[concat(variables('factoryId'), '/datasets/ds_hospit_admissions_daily')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_process_population_databrick_activityrun')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ExecutePopulationTransformation",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Users/deepin_1@outlook.com/set-up/mount_storage"
-						},
-						"linkedServiceName": {
-							"referenceName": "demodbricks",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/demodbricks')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/demodbricks')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureDatabricks",
-				"typeProperties": {
-					"domain": "https://adb-3408983348527270.10.azuredatabricks.net",
-					"accessToken": {
-						"type": "SecureString",
-						"value": "[parameters('demodbricks_accessToken')]"
-					},
-					"existingClusterId": "[parameters('demodbricks_properties_typeProperties_existingClusterId')]"
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }

@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "K21ProjectDF"
 		},
+		"demodbricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'demodbricks'"
+		},
 		"ls_adls_k21project_repdl_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adls_k21project_repdl'"
@@ -19,9 +23,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'ls_db_k21_cluster'"
 		},
-		"demodbricks_accessToken": {
+		"ls_sql_k21proj_db_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'demodbricks'"
+			"metadata": "Secure string for 'connectionString' of 'ls_sql_k21proj_db'"
+		},
+		"demodbricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0618-122214-3v531adn"
 		},
 		"is_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 			"type": "string",
@@ -30,10 +38,6 @@
 		"ls_adls_k21project_repdl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://k21projectdlsg2.dfs.core.windows.net/"
-		},
-		"demodbricks_properties_typeProperties_existingClusterId": {
-			"type": "string",
-			"defaultValue": "0618-122214-3v531adn"
 		},
 		"containerUri": {
 			"type": "string",
@@ -62,6 +66,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"demodbricks_accessToken": {
+						"value": "[parameters('demodbricks_accessToken')]"
+					},
 					"ls_adls_k21project_repdl_accountKey": {
 						"value": "[parameters('ls_adls_k21project_repdl_accountKey')]"
 					},
@@ -71,17 +78,17 @@
 					"ls_db_k21_cluster_accessToken": {
 						"value": "[parameters('ls_db_k21_cluster_accessToken')]"
 					},
-					"demodbricks_accessToken": {
-						"value": "[parameters('demodbricks_accessToken')]"
+					"ls_sql_k21proj_db_connectionString": {
+						"value": "[parameters('ls_sql_k21proj_db_connectionString')]"
+					},
+					"demodbricks_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('demodbricks_properties_typeProperties_existingClusterId')]"
 					},
 					"is_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 						"value": "[parameters('is_http_opendata_ecdc_europa_eu_properties_typeProperties_url')]"
 					},
 					"ls_adls_k21project_repdl_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls_k21project_repdl_properties_typeProperties_url')]"
-					},
-					"demodbricks_properties_typeProperties_existingClusterId": {
-						"value": "[parameters('demodbricks_properties_typeProperties_existingClusterId')]"
 					}
 				}
 			},
