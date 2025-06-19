@@ -52,6 +52,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "WeeklyData.csv",
 						"fileSystem": "processed"
 					},
 					"columnDelimiter": ",",
