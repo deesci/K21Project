@@ -85,7 +85,7 @@
 							},
 							{
 								"source": {
-									"name": "countWeekly new ICU admissions per 100k",
+									"name": "hospital occupancy count",
 									"type": "String",
 									"physicalType": "String"
 								},
@@ -97,7 +97,7 @@
 							},
 							{
 								"source": {
-									"name": "new_hospit_occupancy",
+									"name": "icu occupancy count",
 									"type": "String",
 									"physicalType": "String"
 								},
@@ -109,7 +109,7 @@
 							},
 							{
 								"source": {
-									"name": "week_end_date",
+									"name": "reported_date",
 									"type": "String",
 									"physicalType": "String"
 								},
