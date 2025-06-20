@@ -39,6 +39,10 @@
 			"type": "string",
 			"defaultValue": "https://k21projectdlsg2.dfs.core.windows.net/"
 		},
+		"ls_diab_service_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://media.githubusercontent.com/media/microsoft/MLOps/refs/heads/master/examples/AzureML-Primers/data/diabetes.csv"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -89,6 +93,9 @@
 					},
 					"ls_adls_k21project_repdl_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls_k21project_repdl_properties_typeProperties_url')]"
+					},
+					"ls_diab_service_properties_typeProperties_url": {
+						"value": "[parameters('ls_diab_service_properties_typeProperties_url')]"
 					}
 				}
 			},

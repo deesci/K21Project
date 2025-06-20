@@ -28,6 +28,9 @@
 		},
 		"ls_adls_k21project_repdl_properties_typeProperties_url": {
 			"value": "https://k21projectdlsg2.dfs.core.windows.net/"
+		},
+		"ls_diab_service_properties_typeProperties_url": {
+			"value": "https://media.githubusercontent.com/media/microsoft/MLOps/refs/heads/master/examples/AzureML-Primers/data/diabetes.csv"
 		}
 	}
 }
